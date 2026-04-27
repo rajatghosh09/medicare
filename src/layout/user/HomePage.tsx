@@ -1,46 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
-  Calendar,
   Phone,
-  Clock,
-  MapPin,
-  Star,
-  ChevronRight,
-  Play,
   Heart,
-  Brain,
-  Eye,
-  Bone,
-  Baby,
-  Stethoscope,
-  Users,
-  CheckCircle,
-  ArrowRight,
   Menu,
   X,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Mail,
 } from "lucide-react";
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Services from "@/components/Services";
-import Stat from "@/components/Stat";
-import Comprehensive from "@/components/Comprehensive";
-import Doctors from "@/components/Doctors";
-import Wellness from "@/components/Wellness";
-import Team from "@/components/Team";
-import Testimonials from "@/components/Testimonials";
-import Blog from "@/components/Blog";
-import Appoinment from "@/components/Appoinment";
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -109,27 +76,6 @@ export default function HomePage() {
         )}
       </header>
 
-      <Hero />
-
-      <About />
-
-      <Services />
-
-      <Stat />
-
-      <Comprehensive />
-
-      <Doctors />
-
-      <Wellness/>
-
-      <Team/>
-
-      <Testimonials/>
-
-      <Blog/>
-
-      <Appoinment/>
     </main>
   );
 }
