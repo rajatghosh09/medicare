@@ -35,6 +35,9 @@ export default function Home() {
 
       <Blog/>
 
-      <Appoinment/></>
+      <Appoinment />
+
+      {/* footer */}
+    </>
   );
 }
