@@ -95,7 +95,7 @@ const login = () => {
           </CardContent>
           <CardFooter className="flex-col gap-2">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "loading...": "Login"}
+              {loading ? "loading..." : "Login"}
             </Button>
           </CardFooter>
         </form>
@@ -118,4 +118,4 @@ export default login
 
 
 
-// changes
+// changes 2nd time
