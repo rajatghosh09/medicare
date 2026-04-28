@@ -8,7 +8,7 @@ export default function UserLayout({
 }>) {
   return (
     <div className="flex flex-col">
-      <HomePage />
+      <HomePage/>
       {children}
       <Footer />
     </div>
