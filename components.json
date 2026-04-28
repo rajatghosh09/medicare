@@ -18,6 +18,5 @@
     "ui": "@/components/ui",
     "lib": "@/lib",
     "hooks": "@/hooks"
-  },
-  "registries": {"@ss-blocks": "https://ssblocks.shadcn.com/registry"}
+  }
 }

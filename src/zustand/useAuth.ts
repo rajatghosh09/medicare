@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabaseclint";
 import { create } from "zustand";
-import { setCookie, getCookie } from "cookies-next";
+import { setCookie, getCookie, deleteCookie } from "cookies-next";
 
 type AuthState = {
   loading: boolean;
@@ -11,16 +11,17 @@ type AuthState = {
   role: string | null;
   registerUser: (data: any) => Promise<any>;
   loginUser: (data: any) => Promise<any>;
-  logoutUser: () => void;
+  logoutUser: () => Promise<any>;
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
   loading: false,
   error: null,
-  token: (getCookie("token") as string) || null,
   success: false,
+  token: (getCookie("token") as string) || null,
   user: getCookie("user") ? JSON.parse(getCookie("user") as string) : null,
   role: (getCookie("role") as string) || null,
+
   registerUser: async (data) => {
     // console.log("data comming from zustand", data)
     // return {
@@ -42,29 +43,29 @@ export const useAuthStore = create<AuthState>((set) => ({
       // const userID = "49013beb-a2cf-4a40-9740-8440ba0054b3"
 
       // supabase image upload
-    //   let imageURL: string | null = null;
+      //   let imageURL: string | null = null;
 
-    //   if (data.image) {
-    //     const fileExt =
-    //       data.image.name.split(".").pop() ||
-    //       data.image.type.split("/")[1] ||
-    //       "png";
-    //     const fileName = `${crypto.randomUUID()}/${fileExt}`;
+      //   if (data.image) {
+      //     const fileExt =
+      //       data.image.name.split(".").pop() ||
+      //       data.image.type.split("/")[1] ||
+      //       "png";
+      //     const fileName = `${crypto.randomUUID()}/${fileExt}`;
 
-    //     const { error: uploadError } = await supabase.storage
-    //       .from("registration-image")
-    //       .upload(fileName, data.image);
+      //     const { error: uploadError } = await supabase.storage
+      //       .from("registration-image")
+      //       .upload(fileName, data.image);
 
-    //     if (uploadError) throw uploadError;
+      //     if (uploadError) throw uploadError;
 
-    //     const { data: imageData } = supabase.storage
-    //       .from("registration-image")
-    //       .getPublicUrl(fileName);
-    //     console.log("get image data", imageData);
+      //     const { data: imageData } = supabase.storage
+      //       .from("registration-image")
+      //       .getPublicUrl(fileName);
+      //     console.log("get image data", imageData);
 
-    //     imageURL = imageData.publicUrl;
-    //   }
-    //   console.log("uploaded image url", imageURL);
+      //     imageURL = imageData.publicUrl;
+      //   }
+      //   console.log("uploaded image url", imageURL);
 
       const { data: registration, error: registrationError } = await supabase
         .from("signup")
@@ -73,8 +74,8 @@ export const useAuthStore = create<AuthState>((set) => ({
           email: data.email,
           phone: data.phone,
           password: data.password,
-          role: "user",
-        //   image: imageURL,
+          role: data.role,
+          //   image: imageURL,
           auth_id: userID,
         });
       console.log("registration compleated ", registration);
@@ -119,15 +120,19 @@ export const useAuthStore = create<AuthState>((set) => ({
         .single();
       console.log("profile details", profile);
       if (profileError) throw profileError;
+
       setCookie("token", authData?.session?.access_token, {
         maxAge: 60 * 60 * 24 * 7,
         path: "/",
       });
+
       setCookie("role", profile.role, { maxAge: 60 * 60 * 24 * 7, path: "/" });
+
       setCookie("user", JSON.stringify(profile), {
         maxAge: 60 * 60 * 24 * 7,
         path: "/",
       });
+
       set({
         token: authData?.session?.access_token,
         user: profile,
@@ -150,5 +155,34 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  logoutUser: () => {},
+  logoutUser: async () => {
+    try {
+      set({ loading: true });
+
+      await supabase.auth.signOut();
+
+      deleteCookie("token");
+      deleteCookie("role");
+      deleteCookie("user");
+
+      set({
+        token: null,
+        user: null,
+        role: null,
+        loading: false,
+      });
+
+      return {
+        success: true,
+        message: "Logged out successfully",
+      };
+    } catch (error: any) {
+      set({ loading: false });
+
+      return {
+        success: false,
+        message: error.message || "Logout failed",
+      };
+    }
+  },
 }));
