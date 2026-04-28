@@ -8,9 +8,19 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navItems = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/aboutus" },
+  { name: "Services", path: "/services" },
+  { name: "Doctors", path: "/doctors" },
+  { name: "Blog", path: "/blog" },
+  { name: "Contact", path: "/contactus" },
+];
 
   return (
     <main className="font-sans">
@@ -25,15 +35,15 @@ export default function HomePage() {
           </div>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-            {["Home", "About", "Services", "Doctors", "Blog", "Contact"].map(
+            {navItems.map(
               (item) => (
-                <a
-                  key={item}
-                  href="#"
+                <Link
+                  key={item.name}
+                  href={item.path}
                   className="hover:text-cyan-500 transition-colors"
                 >
-                  {item}
-                </a>
+                  {item.name}
+                </Link>
               ),
             )}
           </nav>
