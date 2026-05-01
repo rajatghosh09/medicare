@@ -1,5 +1,5 @@
 
-const Dashboard = () => {
+const PatientDashboard = () => {
   return (
     <div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. At, consequatur a rem voluptate aliquid quidem rerum consequuntur illum ducimus blanditiis eveniet nesciunt libero culpa! Magnam consequuntur totam non fugit magni.
     Aliquam expedita aperiam ratione inventore suscipit nulla amet assumenda optio, ducimus velit molestias iure. Debitis delectus repellat ut nam, beatae voluptas aperiam quasi minus dignissimos veritatis possimus, autem blanditiis laboriosam!
@@ -14,4 +14,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default PatientDashboard
