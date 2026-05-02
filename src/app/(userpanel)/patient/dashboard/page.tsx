@@ -1,17 +1,95 @@
+"use client";
 
-const PatientDashboard = () => {
+import React from "react";
+import { useUserAppointments } from "@/hooks/appoinment";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Clock, User, Stethoscope, Loader2, AlertCircle } from "lucide-react";
+
+export default function UserAppointmentDashboard() {
+  const { data: appointments, isLoading, isError } = useUserAppointments();
+
+  if (isLoading) return (
+    <div className="flex h-96 items-center justify-center">
+      <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+    </div>
+  );
+
+  if (isError) return (
+    <div className="p-8 text-center text-red-500">
+      <AlertCircle className="mx-auto mb-2 h-10 w-10" />
+      <p>Failed to load appointments.</p>
+    </div>
+  );
+
   return (
-    <div>Lorem ipsum dolor sit, amet consectetur adipisicing elit. At, consequatur a rem voluptate aliquid quidem rerum consequuntur illum ducimus blanditiis eveniet nesciunt libero culpa! Magnam consequuntur totam non fugit magni.
-    Aliquam expedita aperiam ratione inventore suscipit nulla amet assumenda optio, ducimus velit molestias iure. Debitis delectus repellat ut nam, beatae voluptas aperiam quasi minus dignissimos veritatis possimus, autem blanditiis laboriosam!
-    Fugiat odio obcaecati error adipisci accusamus aliquid, maiores saepe fugit quidem, odit quas, commodi quae aut possimus fuga cum praesentium a sint libero inventore nulla eveniet quam. Similique, fugit officia!
-    Atque architecto accusamus labore neque possimus dicta vero fugiat explicabo delectus ea, ad exercitationem itaque enim, dolorem molestias, non magni sapiente esse repellendus mollitia alias nobis. Officia ex eaque culpa.
-    Accusamus nemo doloribus magnam quisquam hic deleniti tempora reiciendis. Excepturi, officia at! Nemo, sequi aliquid. Esse fugiat excepturi, recusandae nisi dolorem impedit iure debitis voluptatum magni sequi quo nostrum deserunt?
-    Eius saepe ipsum perferendis cumque rem optio cupiditate dolores, maxime in dicta unde impedit quidem facere sed incidunt veniam, accusamus laborum aliquam, nihil inventore perspiciatis recusandae tempore. Perspiciatis, dolorem tempore?
-    Fuga debitis consequatur aut vel illo ullam voluptatem ad qui aperiam! Aliquid accusantium repudiandae sapiente facilis possimus? Assumenda, iste aliquid ullam vel possimus fugit culpa quam commodi, ut quae praesentium!
-    Voluptatem tenetur, officiis quae totam nobis nostrum nisi. Tempore, voluptas? Praesentium ipsum alias ut necessitatibus nisi vel. Illum vero hic non excepturi nulla odit repellat exercitationem? Et id vitae velit?
-    Voluptas sapiente error voluptatibus delectus eum aliquid vel aperiam nostrum odio sequi commodi expedita culpa architecto ipsa, consectetur cupiditate perferendis quae rem unde laudantium veritatis doloremque repudiandae assumenda. Eius, inventore!
-    Culpa praesentium voluptatum architecto numquam vitae dolore ducimus at! Quibusdam esse beatae cupiditate soluta eos praesentium reprehenderit assumenda mollitia expedita, nisi sunt porro modi maiores? Doloribus vero culpa quas perspiciatis.</div>
-  )
-}
+    <div className="container mx-auto max-w-5xl py-10 px-4">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900">My Appointments</h1>
+        <p className="text-slate-500">View and track your scheduled medical sessions.</p>
+      </div>
 
-export default PatientDashboard
+      {appointments?.length === 0 ? (
+        <Card className="border-dashed border-2 py-20 text-center">
+          <CardContent>
+            <Calendar className="mx-auto h-12 w-12 text-slate-300 mb-4" />
+            <h3 className="text-lg font-medium">No appointments found</h3>
+            <p className="text-slate-500">You haven't booked any medical appointments yet.</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {appointments?.map((appt) => (
+            <Card key={appt.id} className="overflow-hidden hover:shadow-md transition-shadow">
+              <div className="flex flex-col md:flex-row">
+                {/* Date Highlight */}
+                <div className="bg-blue-50 p-6 flex flex-col items-center justify-center border-r border-blue-100 min-w-[140px]">
+                  <span className="text-blue-600 font-bold text-2xl">
+                    {new Date(appt.date).getDate()}
+                  </span>
+                  <span className="text-blue-400 text-sm uppercase font-semibold">
+                    {new Date(appt.date).toLocaleString('default', { month: 'short' })}
+                  </span>
+                  <span className="text-slate-400 text-xs mt-1">
+                    {new Date(appt.date).getFullYear()}
+                  </span>
+                </div>
+
+                <div className="flex-1 p-6">
+                  <div className="flex flex-wrap justify-between items-start gap-4 mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <Stethoscope className="h-5 w-5 text-cyan-500" />
+                        {appt.treatment}
+                      </h3>
+                      <p className="text-slate-500 flex items-center gap-1 mt-1 text-sm">
+                        <User className="h-4 w-4" /> {appt.doctor}
+                      </p>
+                    </div>
+                    <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-100">
+                      Scheduled
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-4">
+                    <div className="space-y-1">
+                      <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Patient Details</p>
+                      <p className="text-sm font-medium">{appt.name}</p>
+                      <p className="text-xs text-slate-500">{appt.email}</p>
+                    </div>
+                    {appt.message && (
+                      <div className="space-y-1">
+                        <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Note</p>
+                        <p className="text-sm text-slate-600 italic">"{appt.message}"</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
