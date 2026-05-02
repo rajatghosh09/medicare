@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Phone, Heart, Menu, X, User, LayoutDashboard, LogOut } from "lucide-react";
+import { Phone, Heart, Menu, X, User, LayoutDashboard, LogOut, Clock, AlertCircle, Facebook, Instagram, Linkedin, Mail, MapPin, Twitter } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/zustand/useAuth";
@@ -47,6 +47,29 @@ export default function HomePage() {
 
   return (
     <main className="font-sans">
+      {/* ── TOP INFO BAR ───────────────────────────────────────────────── */}
+      <div className="bg-blue-950 text-blue-200 text-xs py-2 hidden md:block">
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-cyan-400" /> Mon–Fri: 8:00–16:00</span>
+            <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-cyan-400" /> maxcareservices@email.com</span>
+            <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-cyan-400" /> 28 Street, New York, USA</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button className="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 transition-colors">
+              <AlertCircle className="w-3 h-3" /> 24-Hour Emergency Aid
+            </button>
+            <div className="flex items-center gap-2">
+              {[Facebook, Instagram, Twitter, Linkedin].map((Icon, i) => (
+                <div key={i} className="w-5 h-5 flex items-center justify-center hover:text-cyan-400 cursor-pointer transition-colors">
+                  <Icon className="w-3 h-3" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <header className=" top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo Section */}

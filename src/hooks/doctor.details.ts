@@ -72,3 +72,33 @@ export const useUpdateDoctorProfile = () => {
     },
   });
 };
+
+
+
+// Add this to your existing hooks file
+export const useAllDoctors = () => {
+  return useQuery({
+    queryKey: ["allDoctors"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("doctor")
+        .select(`
+          auth_id,
+          name,
+          designation,
+          signup (
+            name
+          )
+        `);
+
+      if (error) throw error;
+
+      // We normalize the data to ensure we have a name
+      return data.map((doc: any) => ({
+        id: doc.auth_id,
+        name: doc.name || doc.signup?.name || "Unknown Doctor",
+        designation: doc.designation
+      }));
+    },
+  });
+};
